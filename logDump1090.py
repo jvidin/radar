@@ -27,7 +27,7 @@ def get_data():
             #persist_data(data)
             for each in data:
                 stream.append(each)
-                if len(stream) > 50:
+                if len(stream) > 100:
                     DuplicateRemover(stream)
                     stream = []
                     get_data()
@@ -43,7 +43,7 @@ def DuplicateRemover(stream):
     ##http://stackoverflow.com/questions/7090758/python-remove-duplicate-dictionaries-from-a-list/7091256#7091256
 
     cleanStream = []
-    print(stream)
+    #print(stream)
     getvals = operator.itemgetter('flight','lat','lon')
     stream.sort(key=getvals)
     for k, g in itertools.groupby(stream,getvals):
@@ -55,12 +55,14 @@ def DuplicateRemover(stream):
 def persist_data(data):
     try:
         #print(data)
-        table = db['radar']
-        for each in data:
-            if each['flight'] is not '' and (each['lat'] > 0):
-                print(each)
-                table.insert(dict(each))
-
+        cnt = 0
+        with db as tx:
+            for each in data:
+                if each['flight'] is not '' and (each['lat'] > 0):
+                    cnt+=1
+                    #print(each)
+                    tx['radar'].insert(dict(each))
+        print(str(cnt)+' values inserted')
     except Exception as e:
         print(e)
 
