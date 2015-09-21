@@ -11,7 +11,7 @@ from operator import itemgetter
 
 
 db = dataset.connect('sqlite:///dbradar.db')
-ts = time.time()
+
 
 def startdump():
     try:
@@ -62,6 +62,7 @@ def persist_data(data):
                     cnt+=1
                     #print(each)
                     tx['radar'].insert(dict(each))
+        ts = time.time()
         st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         print(str(st)+ ' ' + str(cnt)+' values inserted')
     except Exception as e:
