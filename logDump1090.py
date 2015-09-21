@@ -1,7 +1,7 @@
 __author__ = 'jo'
 
+import datetime
 import time
-
 import requests
 import dataset
 import os
@@ -11,6 +11,7 @@ from operator import itemgetter
 
 
 db = dataset.connect('sqlite:///dbradar.db')
+ts = time.time()
 
 def startdump():
     try:
@@ -49,12 +50,11 @@ def DuplicateRemover(stream):
     for k, g in itertools.groupby(stream,getvals):
         cleanStream.append(g.next())
     stream[:] = cleanStream
-    print(cleanStream)
+    #print(cleanStream)
     persist_data(cleanStream)
 
 def persist_data(data):
     try:
-        #print(data)
         cnt = 0
         with db as tx:
             for each in data:
@@ -62,7 +62,8 @@ def persist_data(data):
                     cnt+=1
                     #print(each)
                     tx['radar'].insert(dict(each))
-        print(str(cnt)+' values inserted')
+        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        print(str(st)+ ' ' + str(cnt)+' values inserted')
     except Exception as e:
         print(e)
 
