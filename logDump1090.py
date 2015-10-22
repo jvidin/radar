@@ -7,10 +7,12 @@ import dataset
 import os
 import itertools
 import operator
+import logging
 from operator import itemgetter
 
 
-db = dataset.connect('sqlite:///dbradar.db')
+#db = dataset.connect('sqlite:///dbradar.db')
+db = dataset.connect('postgresql://postgres:password@192.168.1.4:5432/testdb')
 
 
 def startdump():
@@ -25,7 +27,6 @@ def get_data():
         while True:
             json_data = requests.get('http://192.168.1.4:8080/data.json')
             data = json_data.json()
-            #persist_data(data)
             for each in data:
                 stream.append(each)
                 if len(stream) > 100:
@@ -65,9 +66,13 @@ def persist_data(data):
         ts = time.time()
         st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         print(str(st)+ ' ' + str(cnt)+' values inserted')
+        logilog(str(cnt))
     except Exception as e:
         print(e)
 
+def logilog(message):
+    logging.basicConfig(filename='log.txt',level=logging.DEBUG)
+    logging.debug(message+'values inserted')
 
 
 if __name__ == '__main__':
