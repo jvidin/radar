@@ -66,6 +66,7 @@ def initDatabase():
                  );""")
         conn.commit()
 
+
     except Exception, e:
         print e
         print "I am unable to connect to the database"
@@ -80,7 +81,7 @@ def get_data():
             data = json_data.json()
             for each in data:
                 stream.append(each)
-                if len(stream) > 10:
+                if len(stream) > 100:
                     DuplicateRemover(stream)
                     #insertIntoTable(stream)
                     stream = []
@@ -95,17 +96,18 @@ def insertIntoTable(cleanStream):
     #print 'stream tuple' , tuple(cleanStream)
 
     try:
-        cur = conn.cursor()
-        for each in cleanStream:
-            keys = each.keys()
-            values = [each[key] for key in keys]
-            insert_statement = 'insert into radar (%s) values %s'
-            cur.execute(insert_statement, (AsIs(','.join(keys)), tuple(values)))
-            conn.commit()
+       with conn.cursor() as cur:
+            for each in cleanStream:
+                keys = each.keys()
+                values = [each[key] for key in keys]
+                insert_statement = 'insert into radar (%s) values %s'
+                cur.execute(insert_statement, (AsIs(','.join(keys)), tuple(values)))
+                conn.commit()
 
-        # ts = time.time()
-        # st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-        # print(str(st) + ' ' + str(cnt)+' values inserted')
+            ts = time.time()
+            st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+            print(str(st) + ' ' + str(len(cleanStream))+' values inserted')
+
     except Exception as e:
         print e
         raise
@@ -117,13 +119,13 @@ def DuplicateRemover(stream):
     # http://stackoverflow.com/questions/7090758/python-remove-duplicate-dictionaries-from-a-list/70912567091256
 
     cleanStream = []
-    print(stream)
+    #print(stream)
     getvals = operator.itemgetter('flight','lat','lon')
     stream.sort(key=getvals)
     for k, g in itertools.groupby(stream,getvals):
         cleanStream.append(g.next())
     stream[:] = cleanStream
-    print(cleanStream)
+    #print(cleanStream)
     #persist_data(cleanStream)
     insertIntoTable(cleanStream)
 
