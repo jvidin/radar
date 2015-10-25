@@ -12,6 +12,7 @@ import operator
 import logging
 from operator import itemgetter
 import psycopg2
+from psycopg2.extensions import AsIs
 
 db = dataset.connect('sqlite:///dbradar.db')
 
@@ -45,8 +46,8 @@ def initDatabase():
         cur = conn.cursor()
 
         cur.execute("""
-                drop table if exists radar3;
-                 CREATE TABLE radar3
+                drop table if exists radar;
+                 CREATE TABLE radar
                  (
                    squawk VARCHAR(10),
                    flight VARCHAR(10),
@@ -71,22 +72,17 @@ def initDatabase():
 
 
 
-
-
-
-
 def get_data():
     try:
         stream = []
         while True:
             json_data = requests.get('http://192.168.1.4:8080/data.json')
             data = json_data.json()
-            #print data
             for each in data:
                 stream.append(each)
                 if len(stream) > 10:
-                    #DuplicateRemover(stream)
-                    insertIntoTable(stream)
+                    DuplicateRemover(stream)
+                    #insertIntoTable(stream)
                     stream = []
                     get_data()
 
@@ -94,14 +90,18 @@ def get_data():
     except:
         pass
 
-def insertIntoTable(stream):
-    print 'stream .. ', stream
-    print 'stream tuple' , tuple(stream)
+def insertIntoTable(cleanStream):
+    #print 'stream .. ', cleanStream
+    #print 'stream tuple' , tuple(cleanStream)
 
     try:
         cur = conn.cursor()
-        args_str = ','.join(cur.mogrify("(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", x) for x in stream)
-        cur.execute("INSERT INTO table VALUES " + args_str)
+        for each in cleanStream:
+            keys = each.keys()
+            values = [each[key] for key in keys]
+            insert_statement = 'insert into radar (%s) values %s'
+            cur.execute(insert_statement, (AsIs(','.join(keys)), tuple(values)))
+            conn.commit()
 
         # ts = time.time()
         # st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
@@ -124,7 +124,8 @@ def DuplicateRemover(stream):
         cleanStream.append(g.next())
     stream[:] = cleanStream
     print(cleanStream)
-    persist_data(cleanStream)
+    #persist_data(cleanStream)
+    insertIntoTable(cleanStream)
 
 def persist_data(data):
     try:
