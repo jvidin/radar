@@ -1,3 +1,5 @@
+import sys
+
 __author__ = 'jo'
 
 import datetime
@@ -11,6 +13,7 @@ import logging
 from operator import itemgetter
 import psycopg2
 
+db = dataset.connect('sqlite:///dbradar.db')
 
 
  # drop table if exists radar3;
@@ -34,37 +37,37 @@ import psycopg2
  #   CONSTRAINT radar3_pkey PRIMARY KEY (id)
  # );
  # INSERT INTO radar3 (geom) VALUES (ST_GeographyFromText('POINT(-9.375732 38.742122)') );
-
+conn = psycopg2.connect("dbname='radar' user='postgres' host='192.168.1.4' password='password'")
 
 def initDatabase():
     try:
-        conn = psycopg2.connect("dbname='radar' user='postgres' host='192.168.1.4' password='password'")
+
         cur = conn.cursor()
 
         cur.execute("""
                 drop table if exists radar3;
                  CREATE TABLE radar3
                  (
-                   id serial NOT NULL,
-                   squawk text,
-                   flight text,
-                   hex text,
-                   track integer,
-                   lon double precision,
-                   altitude integer,
-                   vert_rate integer,
-                   messages integer,
-                   validposition integer,
-                   validtrack integer,
-                   lat double precision,
-                   seen integer,
-                   speed integer,
-                   geom geography(POINT,4326),
-                   CONSTRAINT radar3_pkey PRIMARY KEY (id)
+                   squawk VARCHAR(10),
+                   flight VARCHAR(10),
+                   hex VARCHAR(10),
+                   track VARCHAR(10),
+                   lon VARCHAR(10),
+                   altitude VARCHAR(10),
+                   vert_rate VARCHAR(10),
+                   messages VARCHAR(10),
+                   validposition VARCHAR(10),
+                   validtrack VARCHAR(10),
+                   lat VARCHAR(10),
+                   seen VARCHAR(10),
+                   speed VARCHAR(10),
+                   geom geography(POINT,4326)
                  );""")
-    except:
-        print "I am unable to connect to the database"
+        conn.commit()
 
+    except Exception, e:
+        print e
+        print "I am unable to connect to the database"
 
 
 
@@ -78,17 +81,34 @@ def get_data():
         while True:
             json_data = requests.get('http://192.168.1.4:8080/data.json')
             data = json_data.json()
-            print data
+            #print data
             for each in data:
                 stream.append(each)
                 if len(stream) > 10:
-                    DuplicateRemover(stream)
+                    #DuplicateRemover(stream)
+                    insertIntoTable(stream)
                     stream = []
                     get_data()
 
             time.sleep(1)
     except:
         pass
+
+def insertIntoTable(stream):
+    print 'stream .. ', stream
+    print 'stream tuple' , tuple(stream)
+
+    try:
+        cur = conn.cursor()
+        args_str = ','.join(cur.mogrify("(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", x) for x in stream)
+        cur.execute("INSERT INTO table VALUES " + args_str)
+
+        # ts = time.time()
+        # st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        # print(str(st) + ' ' + str(cnt)+' values inserted')
+    except Exception as e:
+        print e
+        raise
 
 def DuplicateRemover(stream):
     #  http://stackoverflow.com/questions/11092511/python-list-of-unique-dictionaries
