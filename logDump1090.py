@@ -15,29 +15,6 @@ import psycopg2
 from psycopg2.extensions import AsIs
 
 db = dataset.connect('sqlite:///dbradar.db')
-
-
- # drop table if exists radar3;
- # CREATE TABLE radar3
- # (
- #   id serial NOT NULL,
- #   squawk text,
- #   flight text,
- #   hex text,
- #   track integer,
- #   lon double precision,
- #   altitude integer,
- #   vert_rate integer,
- #   messages integer,
- #   validposition integer,
- #   validtrack integer,
- #   lat double precision,
- #   seen integer,
- #   speed integer,
- #   geom geography(POINT,4326),
- #   CONSTRAINT radar3_pkey PRIMARY KEY (id)
- # );
- # INSERT INTO radar3 (geom) VALUES (ST_GeographyFromText('POINT(-9.375732 38.742122)') );
 conn = psycopg2.connect("dbname='radar' user='postgres' host='192.168.1.4' password='password'")
 
 def initDatabase():
@@ -151,5 +128,5 @@ def logilog(message):
 
 
 if __name__ == '__main__':
-    initDatabase()
+    #initDatabase()
     get_data()
