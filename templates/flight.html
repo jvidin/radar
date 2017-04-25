@@ -1,0 +1,227 @@
+{% extends "layout.html" %}
+{% block container %}
+<div class="container-fluid">
+  <ul class="nav nav-pills">
+    <li><a href="/">Home</a></li>
+    <li><a href="/recent">Recent</a></li>
+    <li class="active"><a href="/flight">flight</a></li>
+    <li><a href="/squawk">squawk</a></li>
+  </ul>
+</div>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+      <form>
+        <p>Search by flight: <input type="text" name="flight"></p>
+        <p><input type="submit" value="Submit"></p>
+        <p>Flight examples below :</p>
+        <p>
+          TAP1713
+          TUI2MQ
+          TVF438R
+          TAP005
+          IBK9455
+          TAP839
+          IBS3944
+          RZO152
+          TUI9WH
+          TAP1714
+          EVE7592
+          CFG9FK
+          TUI6H
+          IBK8CK
+          EZY6253
+          BER334Y
+          TCX24KN
+          TFL676
+          TAP062
+          SXD73D
+          TAP323
+          IBS3835
+          TAP1929
+          AEA9059
+          TAP1689
+          TUI5DK
+          IBE6365
+          TAP1049
+          TUI7HL
+          EZY93EL
+          TOM2LM
+          AEA5103
+          RYR98CD
+          NOS653
+          RYR13PZ
+          TAP1927
+          VLG8412
+          EZY41KA
+          TAP431
+          EVE801
+          TAP801
+          RYR89JW
+          RYR17BU
+          SXD32B
+          TRA77N
+          BER279Y
+          RYR2093
+          TVF05JK
+          LGL32P
+          VLG8460
+          TAP662
+          LLC227
+          RYR30VX
+          TFL540
+          TAP553
+          RYR70AV
+          AEA9118
+          TAP1013
+          TAP579
+          TVF06KL
+          EXS89FD
+          VLG3268
+          BAW30T
+          TAP449
+          TAP803L
+          TOM4BV
+          IBE6827
+          TCX25CF
+          IB6024
+          TAP1023
+          TAP557
+          JTG503
+          TAP081B
+          PRW790
+          TAP804
+          IBS3911
+          AEA9047
+          IBK9471
+          BMS157
+          EZY3761
+          AFR456
+          AEA091
+          BER3242
+          TAP1738
+          TUI94M
+          CMB172
+          EDW285
+          IBE3108
+          RYR85CN
+          TAP611A
+          TAP757
+          AVA019
+          RYR24FV
+          TAP469
+          TCX43FT
+          AEA9156
+          TAP1015
+          RYR3805
+          TAP1453
+          JAF5DC
+          BER605R
+          TAP339
+          RYR80JC
+          IBE3109
+          TAP070
+          TFL686
+          BER201Z
+          IBS3827
+          RYR2088
+          TSC719
+          MON459V
+          TOM217
+          AFR194J
+          IBE6833
+          TAP1535
+          TUI3JH
+          GMI1634
+          BAW504
+          TAP1043
+          TAP104
+          TAP1824
+          JAF3DY
+          EZY81BH
+          RZO135
+          TVS7321
+          TCW3EA
+          AEA9239
+          TCX43HE
+          NWS7436
+          IBS3604
+          RYR55XP
+          EIN48L
+          TUI5DH
+          TRA56L
+          EZY52MB
+          RZO3123
+          TAP1676
+          TOM28G
+          RYR75JE
+          ISS74ML
+          TAP949D
+          RYR64NK
+          IBE6841
+          RYR53MM
+          IBE6341
+          TAP1095
+          TAP863
+          EZY2039
+          RYR38ZG
+          TUI6MT
+          RZO132
+          EZY76VJ
+          NJE228R
+          EZY53LX
+          IBE6117
+          EZY7586
+          TAP1931
+          EZY87DA
+          TAP3305
+          AEA9161
+          TSC718
+          DAL470
+          TUI8TJ
+          EZY45UE
+          DLH501
+          TAP437
+          BAW502
+          RYR22LB
+          RYR1039
+          TUI9AC
+          RYR86LV
+          EZY84XP
+          AEA7221
+          RYR16UE
+          JTG356
+          JAF3YE
+          IBE6856
+          IBS39YQ
+          RYR3064
+          EZY3857
+          RYR49WK
+        </p>
+      </form>
+    </div>
+    <div class="span7">
+      <table class="table table-striped">
+        <tr>
+          {% for cell in header %}
+          <td><b>{{ cell }}</b></td>
+          {% endfor %}
+        </tr>
+        {% for item in query %}
+        <tr>
+          <td>{{item.id}}</td>
+          <td>{{item.flight}}</td>
+          <td>{{item.altitude}}</td>
+          <td>{{item.squawk}}</td>
+          <td>{{item.lat}}</td>
+          <td>{{item.lon}}</td>
+          <td>{{item.timer}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

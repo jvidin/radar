@@ -1,0 +1,226 @@
+{% extends "layout.html" %}
+{% block container %}
+<div class="container-fluid">
+  <ul class="nav nav-pills">
+    <li><a href="/">Home</a></li>
+    <li><a href="/recent">Recent</a></li>
+    <li><a href="/flight">flight</a></li>
+    <li class="active"><a href="/squawk">squawk</a></li>
+  </ul>
+</div>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3">
+      <form>
+        <p>Search by squawk: <input type="text" name="squawk"></p>
+        <p><input type="submit" value="Submit"></p>
+        <p>Squawk examples below :</p>
+        <p>
+          3362
+          4044
+          3252
+          3351
+          3212
+          7654
+          2526
+          4774
+          4711
+          4702
+          7712
+          5433
+          4577
+          4704
+          4505
+          2077
+          4023
+          5413
+          4776
+          3273
+          6232
+          2315
+          4452
+          2060
+          6271
+          4463
+          5440
+          2716
+          4543
+          3111
+          5457
+          4676
+          3323
+          4750
+          6217
+          6211
+          2067
+          4533
+          2333
+          7714
+          3375
+          4442
+          4755
+          2076
+          3372
+          7144
+          4461
+          4761
+          2033
+          4535
+          3222
+          3233
+          3377
+          7615
+          2062
+          6262
+          2517
+          4552
+          4447
+          6755
+          3341
+          6255
+          4514
+          3315
+          2564
+          2303
+          2710
+          4545
+          4517
+          4744
+          7652
+          4710
+          6207
+          6424
+          4511
+          2547
+          2732
+          7707
+          4526
+          0621
+          2340
+          4206
+          3276
+          3370
+          3376
+          4551
+          4506
+          6251
+          4460
+          6265
+          7613
+          3244
+          4440
+          3246
+          7122
+          7146
+          2352
+          4544
+          4507
+          3552
+          4471
+          3235
+          4043
+          4717
+          4034
+          7115
+          5444
+          4721
+          3253
+          3337
+          3330
+          6400
+          6267
+          4475
+          2074
+          4653
+          7121
+          3550
+          0352
+          3354
+          4525
+          6204
+          5417
+          3504
+          6250
+          4537
+          4570
+          7664
+          5255
+          3115
+          3171
+          2022
+          7136
+          4741
+          4523
+          4502
+          6224
+          3507
+          4661
+          7716
+          6254
+          7607
+          2045
+          7713
+          3356
+          2327
+          6203
+          2023
+          6765
+          3373
+          3312
+          2354
+          4520
+          6263
+          6242
+          7137
+          4615
+          0137
+          4266
+          2020
+          2724
+          4512
+          0730
+          3334
+          2055
+          4765
+          6236
+          3336
+          2522
+          7624
+          6240
+          6461
+          3371
+          7710
+          7711
+          6436
+          5203
+          2072
+          5462
+          7147
+        </p>
+      </form>
+    </div>
+    <div class="span7">
+      <table class="table table-striped">
+        <tr>
+          {% for cell in header %}
+          <td><b>{{ cell }}</b></td>
+          {% endfor %}
+        </tr>
+        {% for item in query %}
+        <tr>
+          <td>{{item.id}}</td>
+          <td>{{item.flight}}</td>
+          <td>{{item.altitude}}</td>
+          <td>{{item.squawk}}</td>
+          <td>{{item.lat}}</td>
+          <td>{{item.lon}}</td>
+          <td>{{item.timer}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
